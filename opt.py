@@ -155,11 +155,37 @@ def main():
     ta_range = np.arange(0, 3.01, 0.01)
     tb_range = np.arange(0, 3.01, 0.01)
     
-    # Optimize
-    # ta_fix, tb_fix, d_fix = sim_fix.optimize(ta_range, tb_range)
+    # Optimize both scenarios
+    ta_fix, tb_fix, d_fix = sim_fix.optimize(ta_range, tb_range)
     ta_eff, tb_eff, d_eff = sim_eff.optimize(ta_range, tb_range)
-    # print(f"Fixed:   ta={ta_fix:.2f}, tb={tb_fix:.2f}, delay={d_fix:.2f}")
-    print(f"Effective: ta={ta_eff:.2f}, tb={tb_eff:.2f}, delay={d_eff:.2f}")
+    fix_eff_delay = sim_eff.delay(ta_fix, tb_fix)
+    
+    print(f"Fixed scenario:     ta={ta_fix:.2f}, tb={tb_fix:.2f}, delay={d_fix:.2f}")
+    print(f"Effective scenario: ta={ta_eff:.2f}, tb={tb_eff:.2f}, delay={d_eff:.2f}")
+    print(f"Fixed scenario effective delay:     delay={fix_eff_delay:.2f}\n")
+    
+    # (2) Print every 15-minute (0.25h) discharge rates
+    t_points = np.arange(0.25, 3.001, 0.25)
+    print("== Fixed capacity discharge @ 15-min intervals ==")
+    for t in t_points:
+        if t < ta_fix or t > tb_fix:
+            rate = sim_fix.c(t)/2
+            hdv = av = rate
+        else:
+            hdv = sim_fix.a(t)
+            av  = sim_fix.b(t)
+        print(f"t={t:.2f}h | HDV: {hdv:.2f} veh/h, AV: {av:.2f} veh/h")
+    
+    print("\n== Effective capacity discharge @ 15-min intervals ==")
+    for t in t_points:
+        if t < ta_eff or t > tb_eff:
+            rate = sim_eff.c(t)/2
+            hdv = av = rate
+        else:
+            #ifnot = sim_eff.c(t)/2
+            hdv = sim_eff.a(t)
+            av  = sim_eff.b(t)
+        print(f"t={t:.2f}h | HDV: {hdv:.2f} veh/h, AV: {av:.2f} veh/h")
     
     # Plot results
     # fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
