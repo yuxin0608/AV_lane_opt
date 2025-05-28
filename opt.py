@@ -1,4 +1,4 @@
-import os
+ import os
 # (1) Suppress Qt font errors by switching backend to TkAgg
 import matplotlib
 matplotlib.use('TkAgg')
@@ -31,8 +31,8 @@ class AVLaneReservationSimulator:
     # constants for capacities
     k_hd: int = 1023                 
     k_av: int = 2018
-    a_av: int = 3
-    a_hdv: int = 1.5
+    a_av: int = 3.5
+    a_hdv: int = 2.5
     back_table: dict = field(default_factory=lambda: {
         0.1:0.02, 0.2:0.06, 0.3:0.14, 0.4:0.22, 0.5:0.30,
         0.6:0.38, 0.7:0.46, 0.8:0.54, 0.9:0.77, 1.0:1.00
